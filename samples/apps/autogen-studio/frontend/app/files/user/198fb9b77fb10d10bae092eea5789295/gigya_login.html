@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gigya Login</title>
+    <script type="text/javascript" src="https://cdns.gigya.com/js/gigya.js?apikey=YOUR_API_KEY"></script>
+</head>
+<body>
+    <div id="gigyaLoginDiv"></div>
+    <script type="text/javascript">
+        var params = {
+            containerID: 'gigyaLoginDiv',
+            screenSet: 'Default-RegistrationLogin',
+            startScreen: 'gigya-login-screen'
+        };
+        gigya.accounts.showScreenSet(params);
+    </script>
+</body>
+</html>
