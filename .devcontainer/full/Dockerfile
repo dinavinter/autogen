@@ -21,6 +21,9 @@ WORKDIR /home/autogen
 RUN pip install --upgrade pip
 RUN pip install pyautogen[teachable,lmm,retrievechat,mathchat,blendsearch] autogenra
 RUN pip install numpy pandas matplotlib seaborn scikit-learn requests urllib3 nltk pillow pytest beautifulsoup4
+RUN pip install pyautogen[redis]
+RUN pip install pyautogen[graph]
+
 
 # Expose port
 EXPOSE 8081

@@ -227,6 +227,7 @@ class DBManager:
             for agent in agents:
                 agent = AgentFlowSpec(**agent)
                 agent.skills = [skill.dict() for skill in agent.skills] if agent.skills else None
+                # agent.config.llm_config = [model.dict() for model in agent.config.llm_config.config_list] if agent.config.llm_config else None
                 self.cursor.execute(
                     "INSERT INTO agents (id, user_id, timestamp, config, type, skills, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (

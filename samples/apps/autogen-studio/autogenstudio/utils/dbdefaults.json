@@ -1,22 +1,11 @@
 {
   "models": [
-    {
-      "model": "gpt-4",
-      "api_key": "Your Azure API key here",
-      "base_url": "Your Azure base URL here",
+    { 
       "api_type": "azure",
-      "api_version": "Your Azure API version here",
-      "description": "Azure Open AI model configuration"
-    },
-    {
-      "model": "gpt-4-1106-preview",
-      "description": "OpenAI model configuration"
-    },
-    {
-      "model": "TheBloke/zephyr-7B-alpha-AWQ",
-      "api_key": "EMPTY",
-      "base_url": "http://localhost:8000/v1",
-      "description": "Local model example with vLLM server endpoint"
+      "model": "d76615bc07d01db5",
+      "api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA",
+      "base_url": "https://ai-cdp-dev.deno.dev/v2",
+      "api_version": "2024-02-15-preview" 
     }
   ],
   "agents": [
@@ -29,10 +18,23 @@
         "max_consecutive_auto_reply": 5,
         "system_message": "You are a helpful assistant.",
         "default_auto_reply": "TERMINATE",
-        "llm_config": false,
+        "llm_config": { 
+          "config_list": [
+            {
+              "api_type": "azure",
+              "model": "d76615bc07d01db5",
+              "api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA",
+              "base_url": "https://ai-cdp-dev.deno.dev/v2",
+              "api_version": "2024-02-15-preview"
+            }
+          ],
+          "temperature": 0.1,
+          "timeout": 600,
+          "cache_seed": null
+        },
         "code_execution_config": {
-          "work_dir": null,
-          "use_docker": false
+          "work_dir":"workspace", 
+          "use_docker":"python:3"
         }
       }
     },
@@ -57,7 +59,11 @@
         "llm_config": {
           "config_list": [
             {
-              "model": "gpt-4-1106-preview"
+              "api_type": "azure",
+              "model": "d76615bc07d01db5",
+              "api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA",
+              "base_url": "https://ai-cdp-dev.deno.dev/v2",
+              "api_version": "2024-02-15-preview"
             }
           ],
           "temperature": 0.1,
@@ -95,8 +101,8 @@
           "max_consecutive_auto_reply": 5,
           "system_message": "You are a helpful assistant.",
           "code_execution_config": {
-            "work_dir": null,
-            "use_docker": false
+            "work_dir":"workspace",
+            "use_docker":"python:3"
           }
         }
       },
@@ -107,8 +113,12 @@
           "llm_config": {
             "config_list": [
               {
-                "model": "gpt-4-1106-preview"
-              }
+              "api_type": "azure",
+              "model": "d76615bc07d01db5",
+              "api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA",
+              "base_url": "https://ai-cdp-dev.deno.dev/v2",
+              "api_version": "2024-02-15-preview"
+            }
             ],
             "temperature": 0.1,
             "timeout": 600,
@@ -129,7 +139,7 @@
                 "llm_config": {
                   "config_list": [
                     {
-                      "model": "gpt-4-1106-preview"
+                      "model": "d76615bc07d01db5"
                     }
                   ],
                   "temperature": 0.1,
@@ -148,7 +158,7 @@
                 "llm_config": {
                   "config_list": [
                     {
-                      "model": "gpt-4-1106-preview"
+                      "model": "d76615bc07d01db5"
                     }
                   ],
                   "temperature": 0.1,
@@ -167,7 +177,7 @@
                 "llm_config": {
                   "config_list": [
                     {
-                      "model": "gpt-4-1106-preview"
+                      "model": "d76615bc07d01db5"
                     }
                   ],
                   "temperature": 0.1,
@@ -197,8 +207,8 @@
           "default_auto_reply": "TERMINATE",
           "llm_config": false,
           "code_execution_config": {
-            "work_dir": null,
-            "use_docker": false
+            "work_dir":"workspace",
+            "use_docker":"python:3"
           }
         }
       },
@@ -222,8 +232,12 @@
           "llm_config": {
             "config_list": [
               {
-                "model": "gpt-4-1106-preview"
-              }
+              "api_type": "azure",
+              "model": "d76615bc07d01db5",
+              "api_key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA",
+              "base_url": "https://ai-cdp-dev.deno.dev/v2",
+              "api_version": "2024-02-15-preview"
+            }
             ],
             "temperature": 0.1,
             "timeout": 600,
