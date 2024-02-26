@@ -1,0 +1,114 @@
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: autogen
+  namespace: autogen
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: autogen
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: noop
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+      service:
+        name: autogen
+        port: 8081
+ 
+
+---
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: auth
+  namespace: autogen
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: account
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: noop
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+      service:
+        name: oauth2-proxy
+        port: 80
+---
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: gigya-identity
+  namespace: gigya-proxy
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: identity
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: noop
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+      service:
+        name: gigya-oauth2-proxy
+        port: 80
+
+---
+
+---
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: autogen-pr
+  namespace: autogen
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: auto
+  rules:
+    - accessStrategies:
+        - handler: jwt
+          config: 
+            jwks_urls:
+              - https://gigya.cdc.pyzlo.com/oidc/op/v1.0/4_vVpnJOQIK0hSmXhNgODHow/.well-known/jwks
+         
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+      service:
+        name: autogen
+        port: 8081
+#apiVersion: networking.istio.io/v1alpha3
+#kind: EnvoyFilter
+#metadata:
+#  name: oauth2-ingress
+#  namespace: istio-system
+#spec:
+#    workloadSelector:
+#        labels:
+#        istio: ingressgateway
+#    configPatches:
+#      

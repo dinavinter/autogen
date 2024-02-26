@@ -38,8 +38,8 @@ spec:
             type: DirectoryOrCreate
 
       containers:
-        - name: autogen-studio
-          image: ghcr.io/dinavinter/autogen-studio:0.2.15
+        - name: autogen
+          image: ghcr.io/dinavinter/autogen-studio:0.2.15-amd64
           imagePullPolicy: Always              
           ports:
               - containerPort: 8082
@@ -51,13 +51,7 @@ spec:
              - mountPath: /workspace
                name: autogen-volume 
                subPath: workspace
-             - mountPath: /scripts
-               name: autogen-volume
-               subPath: scripts
-             - mountPath: /extensions
-               name: autogen-volume
-               subPath: extensions
-      
+       
 
 ---
 kind: Service
@@ -87,3 +81,31 @@ metadata:
   name: oai-config-list
 type: kubernetes.io/opaque
 
+
+
+
+---
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: httpbin
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: httpbin
+  rules:
+    - accessStrategies:
+        - config:
+            jwks_urls:
+              - https://{sap-cloud-identity-tenant}.ondemand.com/oauth2/certs
+            trusted_issuers:
+              - https://{sap-cloud-identity-tenant}.ondemand.com
+          handler: jwt
+      methods:
+        - GET
+        - HEAD
+      path: /.*
+      service:
+        name: httpbin
+        port: 8000
+      mutators:
+        - handler: noop  #forwards the headers from the gateway to microservice

@@ -1,0 +1,142 @@
+#
+#---
+#apiVersion: gateway.kyma-project.io/v1beta1
+#kind: APIRule
+#metadata:
+#  name: autogen
+#  namespace: autogen
+#spec:
+#  gateway: kyma-gateway.kyma-system.svc.cluster.local
+#  host: autogen
+#  rules:
+#    - accessStrategies:
+#        - config: {}
+#          handler: noop
+#      methods:
+#        - GET
+#        - POST
+#        - PUT
+#        - PATCH
+#        - DELETE
+#        - HEAD
+#      path: /.*
+#      service:
+#        name: autogen
+#        port: 8081
+#
+#---
+#apiVersion: networking.istio.io/v1alpha3
+#kind: EnvoyFilter
+#metadata:
+#  name: oauth2-ingress
+#  namespace: istio-system
+#spec:
+#  workloadSelector:
+#    labels:
+#      istio: ingressgateway
+#  configPatches:
+#    - applyTo: CLUSTER
+#      match:
+#        cluster:
+#          service: oauth
+#      patch:
+#        operation: ADD
+#        value:
+#          name: oauth
+#          dns_lookup_family: V4_ONLY
+#          type: LOGICAL_DNS
+#          connect_timeout: 10s
+#          lb_policy: ROUND_ROBIN
+#          transport_socket:
+#            name: envoy.transport_sockets.tls
+#            typed_config:
+#              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+#              sni: oauth2.googleapis.com
+#          load_assignment:
+#            cluster_name: oauth
+#            endpoints:
+#              - lb_endpoints:
+#                  - endpoint:
+#                      address:
+#                        socket_address:
+#                          address: oauth2.googleapis.com
+#                          port_value: 443
+#    - applyTo: HTTP_FILTER
+#      match:
+#        context: GATEWAY
+#        listener:
+#          filterChain:
+#            filter:
+#              name: "envoy.http_connection_manager"
+#              subFilter:
+#                name: "envoy.filters.http.jwt_authn"
+#      patch:
+#        operation: INSERT_BEFORE
+#        value:
+#          name: envoy.filters.http.oauth2
+#          typed_config:
+#            "@type": type.googleapis.com/envoy.extensions.filters.http.oauth2.v3alpha.OAuth2
+#            config:
+#              token_endpoint:
+#                cluster: oauth
+#                uri: https://oauth2.googleapis.com/token
+#                timeout: 3s
+#              authorization_endpoint: https://accounts.google.com/o/oauth2/v2/auth
+#              redirect_uri: "https://%REQ(:authority)%/_oauth2_callback"
+#              redirect_path_matcher:
+#                path:
+#                  exact: /_oauth2_callback
+#              signout_path:
+#                path:
+#                  exact: /signout
+#              credentials:
+#                client_id: myclientid.apps.googleusercontent.com
+#                token_secret:
+#                  name: token
+#                  sds_config:
+#                    path: "/etc/istio/config/token-secret.yaml"
+#                hmac_secret:
+#                  name: hmac
+#                  sds_config:
+#                    path: "/etc/istio/config/hmac-secret.yaml"
+#---
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-authentication
+  namespace: test-auth
+spec:
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+  jwtRules:
+    - issuer: https://gigya.cdc.pyzlo.com
+      jwksUri: https://gigya.cdc.pyzlo.com/oidc/op/v1.0/4_vVpnJOQIK0hSmXhNgODHow/.well-known/jwks
+      forwardOriginalToken: true
+
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  labels:
+    app.kubernetes.io/name: echo-vr
+  name: echo-vr
+  namespace: test-auth
+spec:
+  gateways:
+    # Name of the Gateway we're going to deploy in a minute.
+    - echo-gateway
+  hosts:
+    # The full host name of the app.
+    - echo.c8f1d33.kyma.ondemand.com
+  http:
+    - route:
+        - destination:
+            # This is the Kubernetes Service info we just deployed.
+            host: echoserver
+            port:
+              number: 80
+---
+#client_id: Wch1smZqnsqtO63iefNygzrq
+#client_secret: 7uH3B9wcnw8SWJ6THG1LbJXHFgXQwKHB64JbMCTC3EZySTihTVF4YgI4NjSaivxuJaCzvQ7_ofVJU0cAgvR97g
