@@ -1,5 +1,5 @@
 fqdn=${1:-$FQDN}
-ISS=${ISS-"https://avemdttta.accounts.ondemand.com"}
+ISS=${OAUTH2_PROXY_ISS-"https://avemdttta.accounts.ondemand.com"}
 OAUTH2_PROXY_CLIENT_ID=${OAUTH2_PROXY_CLIENT_ID-"851a004c-6a81-4fec-b6d3-2c67710fef0c"}
 OAUTH2_PROXY_CLIENT_SECRET=${OAUTH2_PROXY_CLIENT_SECRET-"[]gnVz=ziU:ZqcDAo.]RpemODcmLFX"}
 OAUTH2_PROXY_COOKIE_SECRET=`/usr/bin/python3 -c 'import os,base64; print(base64.b64encode(os.urandom(16)).decode("ascii"))'`

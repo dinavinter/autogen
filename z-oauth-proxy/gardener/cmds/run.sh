@@ -5,12 +5,9 @@ function prepare() {
   service_name=${3:httpbin}
   kubeconfig="$config_dir/kubeconfig"
   mkdir -pv "$config_dir" 
-  echo "config_dir: $config_dir"
   echo "project_name: $project_name"
   echo "cluster_name: $cluster_name"
-  echo "service_name: $service_name"
-
-   
+  echo "service_name: $service_name" 
 }
 
 function fdqn() {
@@ -39,20 +36,40 @@ OAUTH2_PROXY_CLIENT_SECRET=${OAUTH2_PROXY_CLIENT_SECRET-"7uH3B9wcnw8SWJ6THG1LbJX
 EOF
 
 }
+  
+function print_env_and_wait() {
+    green_echo "$(cat "$config_dir/.env" |  column -t -s '='  )"
+    
+    echo
+    blue_echo "Check $config_dir/.env  and change the values if needed; When you are done press any key to continue, Else Ctrl+C to exit"  
+    read -r  
+}  
+
+blue_echo() {
+   echo   "\x1b[1;34m$*" 
+}
+
+green_echo() {
+    echo  "\x1b[1;32m$*"
+}
 
 # shellcheck disable=SC2068
 prepare $@
-./auth.sh "$project_name" "$cluster_name" >> "$kubeconfig"
 
+# authenticate and export kubeconfig
+./auth.sh "$project_name" "$cluster_name" >> "$kubeconfig"
+export "KUBECONFIG=$kubeconfig"
+
+#prepare env
 export_env
 oauth_proxy_params
-export "KUBECONFIG=$kubeconfig"
-echo "FQDN=$(fdqn)" >> "$config_dir/.env"
+echo "FQDN=$(fdqn)" >> "$config_dir/.env"  
+print_env_and_wait
 
 #export all variables
-set -o allexport; source $config_dir/.env; set +o allexport
+set -o allexport; source "$config_dir/.env;" set +o allexport
 
-
+# run commands
 sh -c "cd ${config_dir} && $(pwd)/ingress.sh $FQDN"
 sh -c "cd ${config_dir} && $(pwd)/app.sh $FQDN $SERVICE_NAME"
 sh -c "cd ${config_dir} && $(pwd)/proxy.sh $FQDN"
