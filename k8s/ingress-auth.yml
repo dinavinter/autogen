@@ -1,0 +1,96 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: http-filter-redirect
+  namespace: test-suth
+spec:
+  parentRefs:
+    - name: redirect-gateway
+      sectionName: http
+  hostnames:
+    - test-suth.c8f1d33.kyma.ondemand.com
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+
+ 
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: oauth2-ingress
+  namespace: istio-system
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: CLUSTER
+      match:
+        cluster:
+          service: oauth
+      patch:
+        operation: ADD
+        value:
+          name: oauth
+          dns_lookup_family: V4_ONLY
+          type: LOGICAL_DNS
+          connect_timeout: 10s
+          lb_policy: ROUND_ROBIN
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+              sni: oauth2.googleapis.com
+          load_assignment:
+            cluster_name: oauth
+            endpoints:
+              - lb_endpoints:
+                  - endpoint:
+                      address:
+                        socket_address:
+                          address: oauth2.googleapis.com
+                          port_value: 443
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.jwt_authn"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.oauth2
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.filters.http.oauth2.v3alpha.OAuth2
+            config:
+              token_endpoint:
+                cluster: oauth
+                uri: https://oauth2.googleapis.com/token
+                timeout: 3s
+              authorization_endpoint: https://accounts.google.com/o/oauth2/v2/auth
+              redirect_uri: "https://%REQ(:authority)%/_oauth2_callback"
+              redirect_path_matcher:
+                path:
+                  exact: /_oauth2_callback
+              signout_path:
+                path:
+                  exact: /signout
+              credentials:
+                client_id: myclientid.apps.googleusercontent.com
+                token_secret:
+                  name: token
+                  sds_config:
+                    path: "/etc/istio/config/token-secret.yaml"
+                hmac_secret:
+                  name: hmac
+                  sds_config:
+                    path: "/etc/istio/config/hmac-secret.yaml"
+---

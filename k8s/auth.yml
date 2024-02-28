@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-authentication
+  namespace: autogen
+spec:
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+  jwtRules:
+    - issuer: https://gigya.cdc.pyzlo.com
+      jwksUri: https://gigya.cdc.pyzlo.com/oidc/op/v1.0/4_vVpnJOQIK0hSmXhNgODHow/.well-known/jwks
+      forwardOriginalToken: true
+
+
+ 

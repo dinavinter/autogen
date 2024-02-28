@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: autogen-config
+  namespace: autogen
+data:
+  ENDPOINT: "AZURE"
+  AZURE_OPENAI_API_BASE: "https://ai-cdp-dev.deno.dev/v2"
+  GIGYA_API_KEY: "4_qIcTAyHP_B9dqBgvCutZxA"
+  MODEL_NAME: "gpt-4-32k"
+  MAX_TOKENS: "32000"
+  AZURE_OPENAI_API_KEY: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFUVkJNa0kxUXpKR1JFWkdRelV3TkRWRE5FRXdPRVF6TkRnMFF6RTJSRFpGTjBRMFJFSXpRUSJ9.eyJpc3MiOiJodHRwczovL2xvZ2luLmdpZ2VuLnpvbi5jeC9vaWRjL29wL3YxLjAvNF9hcUdCR2lyVlBnNXpPSVZoWmhuTnBRLyIsImV4cCI6MTczNTc0MTg0MCwiaWF0IjoxNzA0MjA1ODQwLCJhdWQiOiJCZ3h0OW51bFMxYTJVcWt4WEt6UDJGY1MiLCJhdXRoX3RpbWUiOjE3MDM3OTQzMjUsImF6cCI6IkJneHQ5bnVsUzFhMlVxa3hYS3pQMkZjUyIsInN1YiI6IjcwVUllYjl3Zm0zZ19ETEkzX2dHT3RBelltNzlaUGxTVWRQdWJEUUFOT0UiLCJhcHBzIjpbeyJoZWFkZXJzIjoiIHtcIkFJLVJlc291cmNlLUdyb3VwXCI6IFwiZGVmYXVsdFwifSIsInRva2VudXJsIjoiaHR0cHM6Ly9zYXAtY2RwLWRldi15OWs2bXE3eC5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiY2xpZW50aWQiOiJzYi04OThlZWFhYi1mNTNiLTQ5YjQtYjI1Mi1jMmViZGM4YTQzYWYhYjE2OTAzOXxhaWNvcmUhYjU0MCIsImNsaWVudHNlY3JldCI6ImNmZmFkNDI3LTdiOTgtNDc3Yi1iMzQ5LTBiNWYwYzc2NTkyZiQ1a1I0TEdKeGVUaXRLTUw3T1NVSjhDWHM0M1FDRktzRFBmcldLaDZUOVdrPSIsImlkIjoiYWktY2RwLWRldiIsInVybCI6Imh0dHBzOi8vYXBpLmFpLnByb2QuZXUtY2VudHJhbC0xLmF3cy5tbC5oYW5hLm9uZGVtYW5kLmNvbSJ9XSwiYXRfaGFzaCI6IlhEZTdVN2xGODRjWm5CT3JzdEphY1EifQ.BP9nsOBR-TD4xCBwlqWq72oQlMysboPIT-BCnuLUXW3MEyAodej9bNZXe-SAfgVpDE1A3f67fowUeg66ovfVccf1MJEpTwzLs2gFp1Zkwvc9A61Q3IQBa-2JmSB7a3DIBXr808f-yhvwfCSdTNggNXRGS1KtlcGW2w8zdDIjXgKkGXVRj07Z3Bxnwq8PuzH71XEJeLrfV6kBeksTSbVSPWIZN-q-LJ7-dYUeCaYUGgD0fv4WWvFpUVo7SjsduKrkmzckkIJuWIEE93mif3BS8PbaJ9uUG3SSt-fca64l3S2xGBkj9LIyBsqDNjRXcpmmemnazvYHjF1I69TGwu85sA"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autogen
+  namespace: autogen
+  labels:
+    app: autogen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autogen
+  template:
+    metadata:
+      labels:
+        app: autogen
+    spec:
+      imagePullSecrets:
+        - name: ghcr.io
+      volumes:
+        - name: autogen-volume
+          hostPath:
+            path: /home/autogen
+            type: DirectoryOrCreate
+
+      containers:
+        - name: autogen
+          image: ghcr.io/dinavinter/autogen-studio:0.2.15-amd64
+          imagePullPolicy: Always              
+          ports:
+              - containerPort: 8082
+              - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: autogen-config
+          volumeMounts:
+             - mountPath: /workspace
+               name: autogen-volume 
+               subPath: workspace
+       
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: autogen
+  namespace: autogen
+  labels:
+    app: autogen
+spec:
+  selector:
+    app: autogen
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      name: terminal
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      name: studio
+         
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oai-config-list
+type: kubernetes.io/opaque
+
+
+
+
+---
+apiVersion: gateway.kyma-project.io/v1beta1
+kind: APIRule
+metadata:
+  name: httpbin
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  host: httpbin
+  rules:
+    - accessStrategies:
+        - config:
+            jwks_urls:
+              - https://{sap-cloud-identity-tenant}.ondemand.com/oauth2/certs
+            trusted_issuers:
+              - https://{sap-cloud-identity-tenant}.ondemand.com
+          handler: jwt
+      methods:
+        - GET
+        - HEAD
+      path: /.*
+      service:
+        name: httpbin
+        port: 8000
+      mutators:
+        - handler: noop  #forwards the headers from the gateway to microservice
